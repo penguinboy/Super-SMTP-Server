@@ -1,0 +1,9 @@
+Very experimental right now.
+
+Things that work:
+	Bind to port 25 on localhost
+	Successfully interacts with client sending a well formed mail object
+
+Things to be done:
+	Multi-thread stuff
+	Keep the server around after the first mail interaction

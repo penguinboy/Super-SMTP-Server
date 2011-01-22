@@ -1,5 +1,0 @@
-C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\bin\Release\SmtpServer.dll
-C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\bin\Release\SmtpServer.pdb
-C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\obj\Release\ResolveAssemblyReference.cache
-C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\obj\Release\SmtpServer.dll
-C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\obj\Release\SmtpServer.pdb

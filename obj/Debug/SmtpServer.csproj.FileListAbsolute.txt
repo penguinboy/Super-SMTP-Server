@@ -1,0 +1,10 @@
+C:\Users\raynerw\AppData\Local\Temporary Projects\SmtpServer\bin\Debug\SmtpServer.dll
+C:\Users\raynerw\AppData\Local\Temporary Projects\SmtpServer\bin\Debug\SmtpServer.pdb
+C:\Users\raynerw\AppData\Local\Temporary Projects\SmtpServer\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\raynerw\AppData\Local\Temporary Projects\SmtpServer\obj\Debug\SmtpServer.dll
+C:\Users\raynerw\AppData\Local\Temporary Projects\SmtpServer\obj\Debug\SmtpServer.pdb
+C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\bin\Debug\SmtpServer.dll
+C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\bin\Debug\SmtpServer.pdb
+C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\obj\Debug\SmtpServer.dll
+C:\Users\raynerw\documents\visual studio 2010\Projects\SmtpServer\SmtpServer\obj\Debug\SmtpServer.pdb

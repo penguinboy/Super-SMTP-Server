@@ -5,10 +5,14 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.Mail;
+using System.Threading;
 
 namespace SimpleSmtpServer
 {
-    public class SmtpServer
+
+    public delegate void MailMessageHandler(MailMessage m);
+
+    public class SmtpServer : IDisposable
     {
         public const string CMD_GREET = "220 Greetings\n\r";
         public const string CMD_OK = "250 OK\n\r";
@@ -24,17 +28,35 @@ namespace SimpleSmtpServer
         public const string CMD_CL_DATA = "DATA";
         public const string CMD_CL_QUIT = "QUIT";
 
+
+        public event MailMessageHandler MessageRecieved;
+
+        TcpListener listener;
+        Thread processingThread;
+
         public SmtpServer()
         {
-            TcpListener listener = new TcpListener(IPAddress.Any, 25);
+            listener = new TcpListener(IPAddress.Any, 25);
 
             listener.Start();
 
-            ProcessSocket(new SimpleSocket(listener.AcceptSocket()));
+            processingThread = new Thread(new ThreadStart(Run));
+            processingThread.Start();
         }
 
+        private void Run()
+        {
+            while (true)
+            {
+                ProcessSocket(new SimpleSocket(listener.AcceptSocket()));
+            }
+        }
 
-        bool Connected = true;
+        public void Dispose()
+        {
+            processingThread.Abort();
+        }
+
         private void ProcessSocket(SimpleSocket s)
         {
             byte[] b = new byte[1];
@@ -60,6 +82,10 @@ namespace SimpleSmtpServer
             else if (command.Contains(CMD_CL_MAIL))
             {
                 MailBuilder builder = new MailBuilder(command, s);
+                if (this.MessageRecieved != null)
+                {
+                    this.MessageRecieved(builder.Message);
+                }
             }
             else if (command.Contains(CMD_CL_QUIT))
             {

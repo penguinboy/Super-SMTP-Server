@@ -9,15 +9,14 @@ namespace SimpleSmtpServer
     class MailBuilder
     {
         bool MoreToParse = true;
-        MailMessage Message;
+        public MailMessage Message;
 
         public MailBuilder(string initialMailCommand, SimpleSocket s)
         {
             Message = new MailMessage();
 
             Message.From = new MailAddress(ParseValue(initialMailCommand));
-            Console.WriteLine("From: " + Message.From.Address);
-
+            
             s.SendString(SmtpServer.CMD_OK);
 
             while (MoreToParse)
@@ -27,7 +26,6 @@ namespace SimpleSmtpServer
                 if (command.Contains(SmtpServer.CMD_CL_MAIL_RCPT))
                 {
                     MailAddress address = new MailAddress(ParseValue(command));
-                    Console.WriteLine("Adding " + address.Address);
                     Message.To.Add(address);
 
                     s.SendString(SmtpServer.CMD_OK);

@@ -29,7 +29,6 @@ namespace SimpleSmtpServer
 
         public void SendString(string s)
         {
-            Console.WriteLine("Sending: " + s);
             this.Socket.Send(this.Encoding.GetBytes(s));
         }
 
@@ -48,8 +47,6 @@ namespace SimpleSmtpServer
                 string c = ASCIIEncoding.ASCII.GetString(b);
 
                 currentCommand += c;
-
-                Console.Write(c);
 
                 if (currentCommand.Contains(CommandSeperator))
                 {

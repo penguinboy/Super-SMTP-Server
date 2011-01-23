@@ -13,12 +13,12 @@ Very experimental right now. There's a GUI on the way, but for now it's just a t
 
 ## Usage
 Add namespace
-'using SuperSmtpServer;'
+    using SuperSmtpServer;
 
 Instantiate the server with:
-'SmtpServer server = new SmtpServer();'
+    SmtpServer server = new SmtpServer();
 
 Listen for the MessageRecieved event
-'server.MessageRecieved += new MailMessageHandler(server_MessageRecieved);'
+    server.MessageRecieved += new MailMessageHandler(server_MessageRecieved);
 
 A .Net MailMessage will be return by the event.

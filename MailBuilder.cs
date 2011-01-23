@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Mail;
 
-namespace SimpleSmtpServer
+namespace SuperSmtpServer
 {
     class MailBuilder
     {

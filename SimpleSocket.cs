@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 
-namespace SimpleSmtpServer
+namespace SuperSmtpServer
 {
     class SimpleSocket
     {
@@ -47,6 +47,8 @@ namespace SimpleSmtpServer
                 string c = ASCIIEncoding.ASCII.GetString(b);
 
                 currentCommand += c;
+
+                Console.Write(c);
 
                 if (currentCommand.Contains(CommandSeperator))
                 {

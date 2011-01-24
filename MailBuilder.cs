@@ -96,7 +96,7 @@ namespace SuperSmtpServer
         }
 
         char[] newLineChars = new char[] { '\r', '\n' };
-
+        char[] endBodyChars = new char[] { '\r', '\n', '.' };
         public string ParseMessageBody(string message)
         {
             string[] lines = message.Split('\r');
@@ -115,7 +115,7 @@ namespace SuperSmtpServer
                 }
             }
 
-            return builder.ToString();
+            return builder.ToString().TrimEnd(endBodyChars);
         }
     }
 }

@@ -46,7 +46,6 @@ namespace SuperSmtpServer
 
             listener.Start();
 
-
             processingThread = new Thread(new ThreadStart(Run));
             processingThread.Start();
         }
@@ -93,31 +92,34 @@ namespace SuperSmtpServer
 
         private void ProcessCommand(string command, SimpleSocket s)
         {
-            if (command.Contains(CMD_CL_EHLO))
+            if (command != null)
             {
-                s.SendString(CMD_INFO);
-            }
-            else if (command.Contains(CMD_CL_HELO))
-            {
-                s.SendString(CMD_OK);
-            }
-            else if (command.Contains(CMD_CL_MAIL))
-            {
-                MailBuilder builder = new MailBuilder(command, s);
-                if (this.MessageRecieved != null)
+                if (command.StartsWith(CMD_CL_EHLO))
                 {
-                    this.MessageRecieved(builder.Message);
+                    s.SendString(CMD_INFO);
                 }
-            }
-            else if (command.Contains(CMD_CL_QUIT))
-            {
-                s.SendString(CMD_OK);
-                s.Close();
-            }
-            else
-            {
-                Console.WriteLine(command);
-                s.SendString(CMD_UNKNOWN);
+                else if (command.StartsWith(CMD_CL_HELO))
+                {
+                    s.SendString(CMD_OK);
+                }
+                else if (command.StartsWith(CMD_CL_MAIL))
+                {
+                    MailBuilder builder = new MailBuilder(command, s);
+                    if (this.MessageRecieved != null)
+                    {
+                        this.MessageRecieved(builder.Message);
+                    }
+                }
+                else if (command.StartsWith(CMD_CL_QUIT))
+                {
+                    s.SendString(CMD_OK);
+                    s.Close();
+                }
+                else
+                {
+                    Console.WriteLine(command);
+                    s.SendString(CMD_UNKNOWN);
+                }
             }
         }
     }

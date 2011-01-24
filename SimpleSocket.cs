@@ -12,7 +12,13 @@ namespace SuperSmtpServer
         Socket Socket;
 
         public string CommandSeperator = "\r\n";
-        public bool Connected = true;
+        public bool Connected
+        {
+            get
+            {
+                return Socket.Connected;
+            }
+        }
 
 
         public SimpleSocket(Socket s)
@@ -22,9 +28,9 @@ namespace SuperSmtpServer
 
         public void Close()
         {
+            this.Socket.Disconnect(false);
             this.Socket.Close();
             this.Socket.Dispose();
-            this.Connected = false;
         }
 
         public void SendString(string s)
@@ -34,29 +40,41 @@ namespace SuperSmtpServer
 
         public int Receive(byte[] b)
         {
-            return this.Socket.Receive(b);
+            try
+            {
+                return this.Socket.Receive(b);
+            }
+            catch (ObjectDisposedException e)
+            {
+                return 0;
+            }
         }
 
         public string GetNextCommand()
         {
-            string currentCommand = "";
-            byte[] b = new byte[1];
-
-            while (this.Receive(b) == 1)
+            try
             {
-                string c = ASCIIEncoding.ASCII.GetString(b);
+                string currentCommand = "";
+                byte[] b = new byte[1];
 
-                currentCommand += c;
-
-                Console.Write(c);
-
-                if (currentCommand.Contains(CommandSeperator))
+                while (this.Receive(b) == 1)
                 {
-                    return currentCommand;
+                    string c = ASCIIEncoding.ASCII.GetString(b);
+
+                    currentCommand += c;
+
+                    if (currentCommand.Contains(CommandSeperator))
+                    {
+                        return currentCommand;
+                    }
                 }
             }
-            
-            throw new InvalidOperationException("Connection terminated before command seperator finished the current command");
+            catch (SocketException e)
+            {
+                Close();
+            }
+
+            return null;
         }
     }
 }

@@ -1,0 +1,19 @@
+﻿<Window x:Class="SuperSmtpGui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:SuperSmtpGui"
+        xmlns:vm="clr-namespace:SuperSmtpGui.SMTP"
+        Title="Super Smtp Server" Height="386" Width="560" Closing="Window_Closing" BorderThickness="0" ResizeMode="CanMinimize" WindowState="Normal" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:SmtpViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <ListBox Margin="12" Name="MessageList" ItemsSource="{Binding Path=Messages}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <vm:MailViewModel Margin="10"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

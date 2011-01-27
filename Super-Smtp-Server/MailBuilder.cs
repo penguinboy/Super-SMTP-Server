@@ -23,6 +23,11 @@ namespace SuperSmtpServer
             {
                 string command = s.GetNextCommand();
 
+                if (command == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 if (command.Contains(SmtpServer.CMD_CL_MAIL_RCPT))
                 {
                     MailAddress address = new MailAddress(ParseValue(command));
@@ -79,11 +84,21 @@ namespace SuperSmtpServer
             {
                 string[] lines = message.Split('\r');
 
-                foreach (string line in lines)
+                for (int x = 0; x < lines.Length; x++)
                 {
-                    if (line.Contains(key))
+                    if (lines[x].Contains(key))
                     {
-                        return line.Split(':')[1];
+                        StringBuilder builder = new StringBuilder();
+                        builder.Append(lines[x].Split(':')[1]);
+
+                        int nextLine = x + 1;
+                        while (nextLine != lines.Length && lines[nextLine].StartsWith("\n "))
+                        {
+                            builder.Append(lines[nextLine].Substring(1));
+                            nextLine++;
+                        }
+
+                        return builder.ToString();
                     }
                 }
 

@@ -6,7 +6,7 @@ using System.Net.Sockets;
 
 namespace SuperSmtpServer
 {
-    class SimpleSocket
+    public class SimpleSocket
     {
         Encoding Encoding = ASCIIEncoding.ASCII;
         Socket Socket;
@@ -54,22 +54,23 @@ namespace SuperSmtpServer
         {
             try
             {
-                string currentCommand = "";
+                StringBuilder builder = new StringBuilder();
                 byte[] b = new byte[1];
 
+                
                 while (this.Receive(b) == 1)
                 {
                     string c = ASCIIEncoding.ASCII.GetString(b);
 
-                    currentCommand += c;
+                    builder.Append(c);
 
-                    if (currentCommand.Contains(CommandSeperator))
+                    if (builder.ToString().Contains(CommandSeperator))
                     {
-                        return currentCommand;
+                        return builder.ToString();
                     }
                 }
             }
-            catch (SocketException e)
+            catch (Exception e)
             {
                 Close();
             }

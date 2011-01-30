@@ -6,66 +6,9 @@ using System.Net.Mail;
 
 namespace SuperSmtpServer
 {
-    class MailBuilder
+    class SmtpMailVerbUtils
     {
-        bool MoreToParse = true;
-        public MailMessage Message;
-
-        public MailBuilder(string initialMailCommand, SimpleSocket s)
-        {
-            Message = new MailMessage();
-
-            Message.From = new MailAddress(ParseValue(initialMailCommand));
-            
-            s.SendString(SmtpServer.CMD_OK);
-
-            while (MoreToParse)
-            {
-                string command = s.GetNextCommand();
-
-                if (command == null)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                if (command.Contains(SmtpServer.CMD_CL_MAIL_RCPT))
-                {
-                    MailAddress address = new MailAddress(ParseValue(command));
-                    Message.To.Add(address);
-
-                    s.SendString(SmtpServer.CMD_OK);
-                }
-                else if (command.Contains(SmtpServer.CMD_CL_DATA))
-                {
-                    s.CommandSeperator = "\r\n.\r\n";
-
-                    s.SendString(SmtpServer.CMD_DATA_OK);
-
-                    string rawMessage = s.GetNextCommand();
-
-                    string subject = ParseMessageValue(rawMessage, "Subject");
-                    string body = ParseMessageBody(rawMessage);
-
-                    if (string.IsNullOrEmpty(body) || string.IsNullOrEmpty(subject))
-                    {
-                        throw new InvalidOperationException("Malformed message");
-                    }
-                    else
-                    {
-                        Message.Body = body;
-                        Message.Subject = subject;
-
-                        s.CommandSeperator = "\r\n";
-
-                        MoreToParse = false;
-                        s.SendString(SmtpServer.CMD_OK);
-                    }
-                }
-                
-            }
-        }
-
-        private string ParseValue(string command)
+        public static string ParseValue(string command)
         {
             if (command.Contains(':'))
             {
@@ -78,7 +21,7 @@ namespace SuperSmtpServer
             }
         }
 
-        public string ParseMessageValue(string message, string key)
+        public static string ParseMessageValue(string message, string key)
         {
             if (message.Contains(':'))
             {
@@ -110,9 +53,9 @@ namespace SuperSmtpServer
             }
         }
 
-        char[] newLineChars = new char[] { '\r', '\n' };
-        char[] endBodyChars = new char[] { '\r', '\n', '.' };
-        public string ParseMessageBody(string message)
+        private static char[] newLineChars = new char[] { '\r', '\n' };
+        private static char[] endBodyChars = new char[] { '\r', '\n', '.' };
+        public static string ParseMessageBody(string message)
         {
             string[] lines = message.Split('\r');
 

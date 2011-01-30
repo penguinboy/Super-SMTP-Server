@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Net.Mail;
 using System.Threading;
+using SuperSmtpServer.Verbs;
 
 namespace SuperSmtpServer
 {
@@ -14,24 +15,15 @@ namespace SuperSmtpServer
 
     public class SmtpServer : IDisposable
     {
-        public const string CMD_GREET = "220 Greetings\r\n";
-        public const string CMD_OK = "250 OK\r\n";
-        public const string CMD_INFO = "250-SSMTP Server\r\n250-PLAIN\r\n" + CMD_OK;
-        public const string CMD_QUIT = "250 OK\r\n";
-        public const string CMD_DATA_OK = "354 Start mail input; end with .\r\n";
-        public const string CMD_UNKNOWN = "500 Unknown command\r\n";
-        public const string CMD_GO = "220 Go ahead";
-
-        public const string CMD_CL_EHLO = "EHLO";
-        public const string CMD_CL_HELO = "HELO";
-        public const string CMD_CL_MAIL = "MAIL FROM:";
-        public const string CMD_CL_MAIL_RCPT = "RCPT TO:";
-        public const string CMD_CL_DATA = "DATA";
-        public const string CMD_CL_QUIT = "QUIT";
-        public const string CMD_CL_STARTTLS = "STARTTLS";
+        public delegate void SmtpVerbHandler(Session s);
+        public Dictionary<string, SmtpVerbHandler> VerbStore;
 
 
         public event MailMessageHandler MessageRecieved;
+        public void OnMessageRecieved(MailMessage m)
+        {
+            MessageRecieved(m);
+        }
 
         TcpListener listener;
         Thread processingThread;
@@ -40,6 +32,16 @@ namespace SuperSmtpServer
 
         public SmtpServer()
         {
+            // add the standard verbs to support
+            this.VerbStore = new KeyValuePair<string, SmtpVerbHandler>[] {
+                new KeyValuePair<string, SmtpVerbHandler>(SmtpCommandUtils.CL_HELO, new SmtpVerbHandler(new Helo().Do)),
+                new KeyValuePair<string, SmtpVerbHandler>(SmtpCommandUtils.CL_EHLO, new SmtpVerbHandler(new Ehlo().Do)),
+                new KeyValuePair<string, SmtpVerbHandler>(SmtpCommandUtils.CL_MAIL, new SmtpVerbHandler(new Mail().Do)),
+                new KeyValuePair<string, SmtpVerbHandler>(SmtpCommandUtils.CL_MAIL_RCPT, new SmtpVerbHandler(new MailRcpt().Do)),
+                new KeyValuePair<string, SmtpVerbHandler>(SmtpCommandUtils.CL_DATA, new SmtpVerbHandler(new Data().Do)),
+                new KeyValuePair<string, SmtpVerbHandler>(SmtpCommandUtils.CL_QUIT, new SmtpVerbHandler(new Quit().Do))
+            }.ToDictionary(kv => kv.Key, kv => kv.Value);
+            
             SocketPool = new List<SimpleSocket>();
 
             listener = new TcpListener(IPAddress.Any, 25);
@@ -80,47 +82,40 @@ namespace SuperSmtpServer
 
         private void ProcessSocket(SimpleSocket s)
         {
-            byte[] b = new byte[1];
-
-            s.SendString(CMD_GREET);
+            var session = new Session(s, new MailMessageHandler(OnMessageRecieved));
 
             while (s.Connected && Running)
             {
-                ProcessCommand(s.GetNextCommand(), s);
+                ProcessCommand(session.Socket.GetNextCommand(), session);
             }
         }
 
-        private void ProcessCommand(string command, SimpleSocket s)
+        private void ProcessCommand(string commandLine, Session session)
         {
-            if (command != null)
+            if (commandLine != null)
             {
-                if (command.StartsWith(CMD_CL_EHLO))
+                var command = ParseCommand(commandLine);
+
+                if (VerbStore.ContainsKey(command))
                 {
-                    s.SendString(CMD_INFO);
-                }
-                else if (command.StartsWith(CMD_CL_HELO))
-                {
-                    s.SendString(CMD_OK);
-                }
-                else if (command.StartsWith(CMD_CL_MAIL))
-                {
-                    MailBuilder builder = new MailBuilder(command, s);
-                    if (this.MessageRecieved != null)
-                    {
-                        this.MessageRecieved(builder.Message);
-                    }
-                }
-                else if (command.StartsWith(CMD_CL_QUIT))
-                {
-                    s.SendString(CMD_OK);
-                    s.Close();
+                    session.Commands.Add(commandLine);
+                    VerbStore[command].Invoke(session);
                 }
                 else
                 {
-                    Console.WriteLine(command);
-                    s.SendString(CMD_UNKNOWN);
+                    session.Socket.SendString(SmtpCommandUtils.SV_UNKNOWN);
                 }
             }
+        }
+
+        private string ParseCommand(string commandLine)
+        {
+            if (commandLine.Contains(' '))
+            {
+                commandLine = commandLine.Split(' ')[0];
+            }
+            commandLine = commandLine.TrimEnd(new char[] { '\r', '\n' });
+            return commandLine;
         }
     }
 }

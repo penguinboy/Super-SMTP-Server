@@ -40,15 +40,12 @@ If you're unhappy with the GUI that comes with Supert-Smtp-Server, then I would 
 
 1. Clone this git repo
 2. Include the 'SuperSmtpServer' project in your solution (add a reference to the project, duh)
-3. Add a useing statement in your code
-
-    using SuperSmtpServer;
+3. Add a using statement in your code
+        using SuperSmtpServer;
 4. At an appropriate time, init the server component
-
-    var server = new SmtpServer();
-5. Add an event listener to the MessageReceived event
-
-    server.MessageRecieved += new MailMessageHandler(server_MessageRecieved);
+        var server = new SmtpServer();
+5. Add an event handler to the MessageReceived event
+        server.MessageRecieved += new MailMessageHandler(server_MessageRecieved);
 
 
 

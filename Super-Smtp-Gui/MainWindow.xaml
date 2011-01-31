@@ -29,7 +29,7 @@
         </Rectangle>
         <ToggleButton Margin="414,12,12,14" IsChecked="True" Content="Stop Server" Checked="ToggleButton_Checked" Name="buttonOnOff" Unchecked="buttonOnOff_Unchecked" />
         <Label Content="Server address :" Height="28" HorizontalAlignment="Left" Margin="11,7,0,0" Name="label1" VerticalAlignment="Top" />
-        <TextBlock Height="23" Margin="107,12,254,0" Name="textBlock1" Text="{Binding Path=ServerAddress}" VerticalAlignment="Top" DataContext="{Binding}" />
+        <TextBlock Height="23" Margin="107,12,254,0" Name="txtServerAddress" Text="{Binding Path=ServerAddress}" VerticalAlignment="Top" DataContext="{Binding}" />
         <Label Content="Mail received :" Height="28" HorizontalAlignment="Left" Margin="18,32,0,0" Name="label2" VerticalAlignment="Top" />
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="107,37,0,0" Name="textBlock2" Text="{Binding}" VerticalAlignment="Top" DataContext="{Binding Path=Messages.Count}" />
     </Grid>

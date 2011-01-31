@@ -9,10 +9,11 @@ using System.ComponentModel;
 using System.Windows.Threading;
 using System.Threading;
 using System.Configuration;
+using System.Net;
 
 namespace SuperSmtpGui.SMTP
 {
-    class SmtpViewModel
+    class SmtpViewModel : INotifyPropertyChanged
     {
         Thread UiThread;
         SmtpServer server;
@@ -21,7 +22,11 @@ namespace SuperSmtpGui.SMTP
         {
             get
             {
-                return ConfigurationManager.AppSettings["ip"] + " : " + ConfigurationManager.AppSettings["port"];
+                if (server == null)
+                {
+                    return "Server starting...";
+                }
+                return ((server.ListeningIp == IPAddress.Any) ? "Any" : server.ListeningIp.ToString()) + " : " + server.ListeningPort;
             }
         }
 
@@ -34,12 +39,14 @@ namespace SuperSmtpGui.SMTP
             }
         }
 
+        public event EventHandler ServerDetailsChanged;
+
         public void Start()
         {
             UiThread = Thread.CurrentThread;
             server = new SmtpServer();
+            this.PropertyChanged(this, new PropertyChangedEventArgs("ServerAddress"));
             
-
             server.MessageRecieved += new MailMessageHandler(server_MessageRecieved);
         }
 
@@ -57,5 +64,7 @@ namespace SuperSmtpGui.SMTP
         {
             _messages.Add(m);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

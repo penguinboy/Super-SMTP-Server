@@ -16,9 +16,13 @@ namespace SuperSmtpServer
 
     public class SmtpServer : IDisposable
     {
+        const int DEFAULTPORT = 25;
+        IPAddress DEFAULTIP = IPAddress.Any;
+        const string CONFIGIP = "SuperSmtpIP";
+        const string CONFIGPORT = "SuperSmtpPort";
+
         public delegate void SmtpVerbHandler(Session s);
         public Dictionary<string, SmtpVerbHandler> VerbStore;
-
 
         public event MailMessageHandler MessageRecieved;
         public void OnMessageRecieved(MailMessage m)
@@ -48,11 +52,26 @@ namespace SuperSmtpServer
             
             SocketPool = new List<SimpleSocket>();
 
-            var configIp = ConfigurationManager.AppSettings["ip"];
-            this.ListeningIp = (configIp == "any") ? IPAddress.Any : IPAddress.Parse(configIp);
-            this.ListeningPort = Int32.Parse(ConfigurationManager.AppSettings["port"]);
-            listener = new TcpListener(this.ListeningIp, this.ListeningPort);
+            if (ConfigurationManager.AppSettings[CONFIGIP] != null)
+            {
+                var configIp = ConfigurationManager.AppSettings[CONFIGIP];
+                this.ListeningIp = (configIp == "any") ? IPAddress.Any : IPAddress.Parse(configIp);
+            }
+            else
+            {
+                this.ListeningIp = DEFAULTIP;
+            }
 
+            if (ConfigurationManager.AppSettings[CONFIGPORT] != null)
+            {
+                this.ListeningPort = Int32.Parse(ConfigurationManager.AppSettings[CONFIGPORT]);
+            }
+            else
+            {
+                this.ListeningPort = DEFAULTPORT;
+            }
+
+            listener = new TcpListener(this.ListeningIp, this.ListeningPort);            
             listener.Start();
 
             processingThread = new Thread(new ThreadStart(Run));

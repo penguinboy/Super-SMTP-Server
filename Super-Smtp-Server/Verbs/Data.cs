@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net.Mail;
 
 namespace SuperSmtpServer.Verbs
 {
@@ -18,6 +19,7 @@ namespace SuperSmtpServer.Verbs
             string rawMessage = socket.GetNextCommand();
             socket.CommandSeperator = "\r\n";
 
+            string encoding = SmtpMailVerbUtils.ParseMessageValue(rawMessage, "Content-Transfer-Encoding");
             string subject = SmtpMailVerbUtils.ParseMessageValue(rawMessage, "Subject");
             string body = SmtpMailVerbUtils.ParseMessageBody(rawMessage);
 
@@ -29,6 +31,17 @@ namespace SuperSmtpServer.Verbs
             {
                 session.Message.Body = body;
                 session.Message.Subject = subject;
+
+                // adjust for encoding
+
+                if (encoding == "quoted-printable")
+                {
+                    // hack for quoted-printable decoding
+                    // only does white space
+                    session.Message.Body = session.Message.Body.Replace("=0A", "\n");
+                    session.Message.Body = session.Message.Body.Replace("=0D", "\r");
+                }
+
 
                 // all done with getting the data
                 session.TriggerMessage(session.Message);

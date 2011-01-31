@@ -12,8 +12,7 @@ Super-Smtp-Server is a tiny SMTP server that is designed to allow developers to 
 
 ## Use
 1. Start the server with:
-
-    SuperSmtpGui.exe
+        SuperSmtpGui.exe
 2. Point your mail-sending application to localhost, on port 25.
 3. Send your mail, get satisfaction from the fact that it shows in server's window.
 

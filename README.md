@@ -24,14 +24,14 @@ You can customise the port and ip address being used by the server. All configur
 
 #### Ip Address Binding
 The line below defines the Ip Address being used by Super-Smtp-Sever.
-    <add key="ip" value="any"/>
+    <add key="SuperSmtpIp" value="any"/>
 
 - *Any* means any ip address that your computer has.
 - If you want to specify an ip address, put it in standard IP for. (eg. 192.168.1.10)
 
 #### Port Binding
 The line below defines the port that Super-Smtp-Server uses.
-    <add key="port" value="25"/>
+    <add key="SuperSmtpPort" value="25"/>
 
 
 ## Screw your UI, I just want the server!

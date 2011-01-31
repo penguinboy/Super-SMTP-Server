@@ -3,17 +3,34 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:SuperSmtpGui"
         xmlns:vm="clr-namespace:SuperSmtpGui.SMTP"
-        Title="Super Smtp Server" Height="386" Width="560" Closing="Window_Closing" BorderThickness="0" ResizeMode="CanMinimize" WindowState="Normal" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Super Smtp Server" Height="497" Width="560" Closing="Window_Closing" BorderThickness="0" ResizeMode="CanMinimize" WindowState="Normal" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" Icon="/SuperSmtpGui;component/gnome-mailIcon.png">
     <Window.DataContext>
         <vm:SmtpViewModel/>
     </Window.DataContext>
     <Grid>
-        <ListBox Margin="12" Name="MessageList" ItemsSource="{Binding Path=Messages}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70" />
+            <RowDefinition Height="287*" />
+        </Grid.RowDefinitions>
+        <ListBox Margin="12,17,12,12" Name="MessageList" ItemsSource="{Binding Path=Messages}" Grid.Row="1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <vm:MailViewModel Margin="10"/>
+                    <vm:MailViewModel Margin="4"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Rectangle Name="rectangle1" Stroke="Black" StrokeThickness="0.5" Margin="-10,-10,-10,0">
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                    <GradientStop Color="#DDDDDD" Offset="0" />
+                    <GradientStop Color="White" Offset="1" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <ToggleButton Margin="414,12,12,14" IsChecked="True" Content="Stop Server" Checked="ToggleButton_Checked" Name="buttonOnOff" Unchecked="buttonOnOff_Unchecked" />
+        <Label Content="Server address :" Height="28" HorizontalAlignment="Left" Margin="11,7,0,0" Name="label1" VerticalAlignment="Top" />
+        <TextBlock Height="23" Margin="107,12,254,0" Name="textBlock1" Text="{Binding Path=ServerAddress}" VerticalAlignment="Top" DataContext="{Binding}" />
+        <Label Content="Mail received :" Height="28" HorizontalAlignment="Left" Margin="18,32,0,0" Name="label2" VerticalAlignment="Top" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="107,37,0,0" Name="textBlock2" Text="{Binding}" VerticalAlignment="Top" DataContext="{Binding Path=Messages.Count}" />
     </Grid>
 </Window>

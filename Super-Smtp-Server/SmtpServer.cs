@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Net.Mail;
 using System.Threading;
 using SuperSmtpServer.Verbs;
+using System.Configuration;
 
 namespace SuperSmtpServer
 {
@@ -24,6 +25,9 @@ namespace SuperSmtpServer
         {
             MessageRecieved(m);
         }
+
+        public IPAddress ListeningIp;
+        public int ListeningPort;
 
         TcpListener listener;
         Thread processingThread;
@@ -44,7 +48,10 @@ namespace SuperSmtpServer
             
             SocketPool = new List<SimpleSocket>();
 
-            listener = new TcpListener(IPAddress.Any, 25);
+            var configIp = ConfigurationManager.AppSettings["ip"];
+            this.ListeningIp = (configIp == "any") ? IPAddress.Any : IPAddress.Parse(configIp);
+            this.ListeningPort = Int32.Parse(ConfigurationManager.AppSettings["port"]);
+            listener = new TcpListener(this.ListeningIp, this.ListeningPort);
 
             listener.Start();
 
@@ -76,6 +83,7 @@ namespace SuperSmtpServer
             {
                 s.Close();
             }
+            listener.Stop();
 
             processingThread.Abort();
         }

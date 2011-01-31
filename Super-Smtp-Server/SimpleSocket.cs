@@ -64,6 +64,8 @@ namespace SuperSmtpServer
 
                     builder.Append(c);
 
+                    Console.Write(c);
+
                     if (builder.ToString().Contains(CommandSeperator))
                     {
                         return builder.ToString();

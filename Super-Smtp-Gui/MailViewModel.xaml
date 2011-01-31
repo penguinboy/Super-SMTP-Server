@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="500">
+             d:DesignHeight="50" d:DesignWidth="500" MouseDoubleClick="UserControl_MouseDoubleClick">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25*" />
@@ -14,11 +14,12 @@
             <ColumnDefinition Width="191*" />
             <ColumnDefinition Width="309*" />
         </Grid.ColumnDefinitions>
+        <Rectangle Fill="Transparent" Grid.ColumnSpan="2" Height="50" HorizontalAlignment="Left" Name="rectangle1" Stroke="{x:Null}" VerticalAlignment="Top" Width="500" Grid.RowSpan="2" />
         <Label Content="From:" Height="25" HorizontalAlignment="Left" Name="label1" VerticalAlignment="Top" />
         <Label Content="To:" Height="25" HorizontalAlignment="Left" Name="label2" VerticalAlignment="Top" Grid.Row="1" />
-        <TextBlock Height="22" Margin="46,4,0,24" Name="textBlock1" Text="{Binding Path=From.Address}" VerticalAlignment="Center" Grid.RowSpan="2" TextTrimming="CharacterEllipsis" />
-        <TextBlock Grid.Row="1" Height="22" HorizontalAlignment="Left" Margin="46,4,0,0" Name="textBlock2" Text="{Binding Path=To[0].Address}" VerticalAlignment="Center" Width="145" TextTrimming="CharacterEllipsis" />
-        <TextBlock Grid.Column="1" Grid.RowSpan="2" Height="26" VerticalAlignment="Center" Margin="64,14,0,10" Name="textBlock3" Text="{Binding Path=Subject}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="233" />
+        <TextBlock Height="22" Margin="46,5,0,23" Name="textBlock1" Text="{Binding Path=From.Address}" VerticalAlignment="Center" Grid.RowSpan="2" TextTrimming="CharacterEllipsis" />
+        <TextBlock Grid.Row="1" Height="22" HorizontalAlignment="Left" Margin="46,4,0,-2" Name="textBlock2" Text="{Binding Path=To[0].Address}" VerticalAlignment="Center" Width="145" TextTrimming="CharacterEllipsis" />
+        <TextBlock Grid.Column="1" Grid.RowSpan="2" Height="26" VerticalAlignment="Center" Margin="64,15,0,9" Name="textBlock3" Text="{Binding Path=Subject}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="233" />
         <Label Content="Subject:" Grid.Column="1" Grid.RowSpan="2" Height="28" HorizontalAlignment="Left" Margin="6,10,0,0" Name="label3" VerticalAlignment="Top" />
     </Grid>
 </UserControl>

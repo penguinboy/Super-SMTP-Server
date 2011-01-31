@@ -43,5 +43,23 @@ namespace SuperSmtpGui
         {
 
         }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (viewModel != null)
+            {
+                buttonOnOff.Content = "Stop Server";
+                viewModel.Start();
+            }
+        }
+
+        private void buttonOnOff_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (viewModel != null)
+            {
+                buttonOnOff.Content = "Start Server";
+                viewModel.Stop();
+            }
+        }
     }
 }

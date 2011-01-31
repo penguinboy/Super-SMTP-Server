@@ -9,25 +9,27 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net.Mail;
+using SuperSmtpGui.SMTP;
 
-namespace SuperSmtpGui.SMTP
+namespace SuperSmtpGui
 {
     /// <summary>
-    /// Interaction logic for MailViewModel.xaml
+    /// Interaction logic for MailMessageWindow.xaml
     /// </summary>
-    public partial class MailViewModel : UserControl
+    public partial class MailMessageWindow : Window
     {
-        public MailViewModel()
+        
+        public MailMessageWindow(MailMessageViewModel m)
         {
             InitializeComponent();
-        }
 
-        private void UserControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            new MailMessageWindow(new MailMessageViewModel((MailMessage)this.DataContext)).Show();
+
+            txtBody.Text = m.Body;
+            txtFrom.Text = m.From;
+            txtTo.Text = m.To;
+            txtSubject.Text = m.Subject;
         }
     }
 }

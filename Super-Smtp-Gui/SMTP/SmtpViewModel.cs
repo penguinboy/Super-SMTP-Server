@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Threading;
+using System.Configuration;
 
 namespace SuperSmtpGui.SMTP
 {
@@ -15,6 +16,14 @@ namespace SuperSmtpGui.SMTP
     {
         Thread UiThread;
         SmtpServer server;
+
+        public string ServerAddress
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["ip"] + " : " + ConfigurationManager.AppSettings["port"];
+            }
+        }
 
         public ObservableCollection<MailMessage> _messages = new ObservableCollection<MailMessage>();
         public ObservableCollection<MailMessage> Messages

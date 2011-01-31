@@ -32,7 +32,7 @@ namespace SuperSmtpServer
                     if (lines[x].Contains(key))
                     {
                         StringBuilder builder = new StringBuilder();
-                        builder.Append(lines[x].Split(':')[1]);
+                        builder.Append(lines[x].Split(':')[1].TrimStart(whitespaceChars));
 
                         int nextLine = x + 1;
                         while (nextLine != lines.Length && lines[nextLine].StartsWith("\n "))
@@ -55,6 +55,7 @@ namespace SuperSmtpServer
 
         private static char[] newLineChars = new char[] { '\r', '\n' };
         private static char[] endBodyChars = new char[] { '\r', '\n', '.' };
+        private static char[] whitespaceChars = new char[] { ' ' };
         public static string ParseMessageBody(string message)
         {
             string[] lines = message.Split('\r');

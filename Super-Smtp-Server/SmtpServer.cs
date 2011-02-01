@@ -80,7 +80,6 @@ namespace SuperSmtpServer
 
         private void Run()
         {
-            Console.WriteLine("Starting thread");
             while (Running)
             {
                 if (listener.Pending())
